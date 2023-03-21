@@ -1,0 +1,72 @@
+
+1. How many promotional mail has been shared with the subscriber of product A,  get those subscriber details who have at least received emails
+
+Select *, count(promotional_mail) as pm from (
+Select s.subscriber_id, s.first_name, s.last_name, pas.promotional_mail from subscriber as s left join product_a as pas on s.subscriber_id = pas.subscriber_id where s.product_A = “yes” and pas.promotional_mail = “yes”
+) as v 
+group by subscriber_id 
+Having pm >= 2
+
+
+
+2. Count of profiles which got updated more than two times
+
+Select u.user_id, count(p.user_id)  as cm from user as u left join  profile as p on u.user_id = p.user_id group by u.user_id having cm >= 2;
+
+Select * from (
+Select u.user_id, count(p.user_id) as cm as c from user as u left join  profile as p on u.user_id = p.user_id group by u.user_id
+) as bh where cm >=2
+
+
+
+3. Three tables join query
+
+SELECT Emp_Name, Emp_No, Emp_Profile, Emp_Country, EmpJoinDate, 
+FROM Employee e INNER JOIN Employment m ON
+e.Emp_ID = m.EMP_ID INNER JOIN EmpDetail d on 
+d.Emp_Email = m.Emp_Email;
+
+
+
+4. Get second largest salary  select min(salary) from (select top 2 salary from employee)
+
+select max(salary) from employee where  salary > (select max(salary) from employee);
+
+Select salary from employee group by salary order by salary desc limit 1,1.        -> means fetch 1 row after one row. -> limit 1 offset 1
+
+
+
+
+5. Write an SQL query to report all customers who never order anything. You can return the result table in any order.
+
+Select c.name from customer where id not in ( 
+	select id from orders
+);
+
+
+Select c.id from customer as c left join orders as o on c.id = o.customer_id  where o.id = NULL;
+
+
+
+6. Write an SQL query to report the movies with an odd-numbered ID and a description that is not "boring". Return the result table ordered by rating in descending order.
+
+Select movies 
+from cinema 
+where mod(id,2) = 1 and 
+description != “boring” 
+order by rating desc;
+
+SELECT *
+FROM Cinema
+WHERE id % 2 = 1 AND description NOT LIKE '%boring%'
+ORDER BY rating DESC;
+
+
+
+7. Construct a SQL query to display the names and balances of people who have a balance greater than $10,000. The balance of an account is equal to the sum of the amounts of all transactions involving that account. 
+
+
+Select u.name sum(u.amount) as s from users as u inner join  transactions as t on u.account_number = t.account_number 
+group by t.account_number 
+having s > 10000;
+
